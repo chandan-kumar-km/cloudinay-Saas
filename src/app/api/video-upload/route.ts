@@ -54,11 +54,9 @@ export async function POST(request: NextRequest) {
         {
           resource_type: "video",
           folder: "video-uploads",
-          // transformation: [{ quality: "auto", fetch_format: "mp4" }],
+          transformation: [{ quality: "auto", fetch_format: "mp4" }],
         },
         (error, result) => {
-          // console.log("comming");
-
           if (error) {
             console.error("Cloudinary error:", error);
             reject(error);
@@ -88,7 +86,7 @@ export async function POST(request: NextRequest) {
       uploadStream.end(buffer);
     });
 
-    // console.log("result ", result);
+    console.log("result ", result);
 
     function clean(input: string | null | undefined): string {
       if (!input) return "";
@@ -111,7 +109,7 @@ export async function POST(request: NextRequest) {
 
     console.log("video - ", video);
 
-    return NextResponse.json(video);
+    return NextResponse.json({ video, result });
   } catch (error) {
     console.log("UPload video failed", error);
     return NextResponse.json({ error: "UPload video failed" }, { status: 500 });

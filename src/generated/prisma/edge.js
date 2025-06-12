@@ -134,7 +134,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/chandankumar/Developer/saas/src/generated/prisma",
+      "value": "/Users/chandankumar/Developer/cloudinay-Saas/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -148,12 +148,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/chandankumar/Developer/saas/prisma/schema.prisma",
+    "sourceFilePath": "/Users/chandankumar/Developer/cloudinay-Saas/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.7.0",
@@ -162,7 +161,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {

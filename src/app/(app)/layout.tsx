@@ -72,7 +72,7 @@ export default function AppLayout({
               {user && (
                 <>
                   <div className="avatar w-5 h-5">
-                    <img
+                    <Image
                       src={user.imageUrl}
                       alt={user.username || user.emailAddresses[0].emailAddress}
                       className="rounded-full object-cover"

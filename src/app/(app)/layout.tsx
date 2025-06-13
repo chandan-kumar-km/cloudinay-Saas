@@ -71,14 +71,11 @@ export default function AppLayout({
             <div className="flex-none flex items-center space-x-4">
               {user && (
                 <>
-                  <div className="avatar">
-                    <Image
+                  <div className="avatar w-5 h-5">
+                    <img
                       src={user.imageUrl}
                       alt={user.username || user.emailAddresses[0].emailAddress}
-                      width={32}
-                      height={32}
-                      className="rounded-full w-8 h-8 object-cover"
-                      priority
+                      className="rounded-full object-cover"
                     />
                   </div>
                   <span className="text-sm truncate max-w-xs lg:max-w-md">

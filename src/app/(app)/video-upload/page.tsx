@@ -4,9 +4,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { CldVideoPlayer } from "next-cloudinary";
 import "next-cloudinary/dist/cld-video-player.css";
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
-
+import "reactjs-popup/dist/index.css";
 
 function VideoUpload() {
   const [file, setFile] = useState<File | null>(null);
@@ -31,37 +29,40 @@ function VideoUpload() {
 
   const MAX_FILE_SIZE = 70 * 1024 * 1024;
 
-  const handleVideoCompressAndDownload = async (option) => {
-  try {
-    const videoUrl = `http://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/q_auto:${option},f_auto/${uploadResponse.publicId}.mov`;
-    
-    // First check the size
-    const res = await fetch(videoUrl, { method: "HEAD" });
-    const sizeInBytes = await res.headers.get("Content-Length");
-    const sizeInMB = (parseInt(sizeInBytes ||" ")/1000000).toFixed(2);
-    console.log(`Compressed size: ${sizeInMB} MB`);
+  const handleVideoCompressAndDownload = async (option: string) => {
+    try {
+      if (!uploadResponse) {
+        toast.error("No upload response found. Please upload a video first.");
+        return;
+      }
+      const videoUrl = `http://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/q_auto:${option},f_auto/${uploadResponse.publicId}.mov`;
 
-    // Then download the video
-    const response = await fetch(videoUrl);
-    const blob = await response.blob();
-    
-    // Create download link
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `compressed-video-${uploadResponse.publicId}.mov`;
-    document.body.appendChild(a);
-    a.click();
-    
-    // Clean up
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-    
-  } catch (error) {
-    console.error("Error compressing or downloading video:", error);
-    toast.error("Failed to compress or download video. Please try again.");
-  }
-};
+      // First check the size
+      const res = await fetch(videoUrl, { method: "HEAD" });
+      const sizeInBytes = await res.headers.get("Content-Length");
+      const sizeInMB = (parseInt(sizeInBytes || " ") / 1000000).toFixed(2);
+      console.log(`Compressed size: ${sizeInMB} MB`);
+
+      // Then download the video
+      const response = await fetch(videoUrl);
+      const blob = await response.blob();
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `compressed-video-${uploadResponse.publicId}.mov`;
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Error compressing or downloading video:", error);
+      toast.error("Failed to compress or download video. Please try again.");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -164,7 +165,7 @@ function VideoUpload() {
             transformation={{
               gravity: "auto",
             }}
-            onError={(err) => setError(err.message)}
+            onError={(err: Error) => setError(err.message)}
           />
           <div className="mt-4">
             <h3 className="text-lg font-semibold">Video Details</h3>
@@ -204,7 +205,9 @@ function VideoUpload() {
             )}
             {selectedCompress && (
               <div className="mt-4">
-                <h3 className="text-lg font-semibold">compress and Download Video </h3>
+                <h3 className="text-lg font-semibold">
+                  compress and Download Video{" "}
+                </h3>
                 {videoQualityOptions.map((option) => (
                   <button
                     key={option}

@@ -16,7 +16,7 @@ interface CloudinaryUploadResult {
   public_id: string;
   bytes?: number;
   duration?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export async function POST(request: NextRequest) {
@@ -50,40 +50,42 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const result = await new Promise(async (resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          resource_type: "video",
-          folder: "video-uploads",
-          transformation: [{ quality: "auto", fetch_format: "mp4" }],
-        },
-        (error, result) => {
-          if (error) {
-            console.error("Cloudinary error:", error);
-            reject(error);
-          } else {
-            console.log("Upload successful:", result);
-            resolve(result as CloudinaryUploadResult);
+    const result = await new Promise<CloudinaryUploadResult>(
+      (resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "video",
+            folder: "video-uploads",
+            transformation: [{ quality: "auto", fetch_format: "mp4" }],
+          },
+          (error, result) => {
+            if (error) {
+              console.error("Cloudinary error:", error);
+              reject(error);
+            } else {
+              console.log("Upload successful:", result);
+              resolve(result as CloudinaryUploadResult);
+            }
           }
+        );
+
+        if (!buffer || buffer.length === 0) {
+          console.error("Buffer is empty or undefined");
+          reject(new Error("Empty file buffer"));
+          return;
         }
-      );
 
-      if (!buffer || buffer.length === 0) {
-        console.error("Buffer is empty or undefined");
-        reject(new Error("Empty file buffer"));
-        return;
+        uploadStream.on("error", (err) => {
+          console.error("Stream error:", err);
+          reject(err);
+        });
+
+        uploadStream.on("finish", () => {
+          console.log("Stream finished");
+        });
+        uploadStream.end(buffer);
       }
-
-      uploadStream.on("error", (err) => {
-        console.error("Stream error:", err);
-        reject(err);
-      });
-
-      uploadStream.on("finish", () => {
-        console.log("Stream finished");
-      });
-      uploadStream.end(buffer);
-    });
+    );
 
     console.log("result ", result);
 

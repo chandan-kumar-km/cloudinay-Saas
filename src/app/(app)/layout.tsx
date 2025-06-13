@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useClerk, useUser } from "@clerk/nextjs";
 import {
@@ -71,14 +72,14 @@ export default function AppLayout({
               {user && (
                 <>
                   <div className="avatar">
-                    <div className="w-8 h-8 rounded-full">
-                      <img
-                        src={user.imageUrl}
-                        alt={
-                          user.username || user.emailAddresses[0].emailAddress
-                        }
-                      />
-                    </div>
+                    <Image
+                      src={user.imageUrl}
+                      alt={user.username || user.emailAddresses[0].emailAddress}
+                      width={32}
+                      height={32}
+                      className="rounded-full w-8 h-8 object-cover"
+                      priority
+                    />
                   </div>
                   <span className="text-sm truncate max-w-xs lg:max-w-md">
                     {user.username || user.emailAddresses[0].emailAddress}

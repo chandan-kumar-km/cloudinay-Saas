@@ -38,7 +38,7 @@ export default function SocialShare() {
   const [AdvEdit, setAdvEdit] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [showAdvEditOptions, setShowAdvEditOptions] = useState(false);
-  const [imagefilter, setimagefilter] = useState();
+  const [imagefilter, setimagefilter] = useState<string | undefined>();
   const [selectedOption, setselectedOption] = useState<
     keyof typeof components | ""
   >("");

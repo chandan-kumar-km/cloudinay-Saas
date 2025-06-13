@@ -118,10 +118,10 @@ export default function SocialShare() {
         throw new Error("Failed to upload image");
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to upload image!");
       setHasError(true);
-      toast.error('Error! please Reload');
+      toast.error(
+        error instanceof Error ? error.message : String(error)
+      );
       setUploadedImage(null);
     } finally {
       setIsUploading(false);

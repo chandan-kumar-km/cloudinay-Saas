@@ -3,23 +3,21 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import VideoCard from "@/components/VideoCard";
 import { Video } from "@/types";
+import toast, { Toaster } from "react-hot-toast";
 function Home() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const fetchVideos = useCallback(async () => {
     try {
       const response = await axios.get("/api/videos");
-      console.log(response);
       if (Array.isArray(response.data)) {
         setVideos(response.data);
       } else {
         throw new Error(" Unexpected response format");
       }
     } catch (error) {
-      console.log(error);
-      setError("Failed to fetch videos");
+      toast.error(error instanceof Error ? error.message : String(error));
     } finally {
       setLoading(false);
     }
@@ -65,6 +63,7 @@ function Home() {
           ))}
         </div>
       )}
+      <Toaster />
     </div>
   );
 }

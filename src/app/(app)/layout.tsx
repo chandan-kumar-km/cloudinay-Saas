@@ -36,6 +36,7 @@ export default function AppLayout({
 
   const handleSignOut = async () => {
     await signOut();
+    router.push("/");
   };
 
   return (

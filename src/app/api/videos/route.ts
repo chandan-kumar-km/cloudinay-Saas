@@ -10,8 +10,6 @@ export async function GET(request: NextRequest){
                 orderBy: {createdAt: "desc"}
             }
         )
-        console.log("comming")
-        console.log(videos)
         return NextResponse.json(videos)
     } catch (error) {
         return NextResponse.json({error: "Error fetching videos"}, {status: 500})

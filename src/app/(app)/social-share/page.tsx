@@ -121,6 +121,7 @@ export default function SocialShare() {
       console.log(error);
       toast.error("Failed to upload image!");
       setHasError(true);
+      toast.error('Error! please Reload');
       setUploadedImage(null);
     } finally {
       setIsUploading(false);
@@ -329,7 +330,9 @@ export default function SocialShare() {
                       ? { rawTransformations: [`e_art:${imagefilter}`] }
                       : {})}
                     {...imageAguments}
-                    onError={() => setHasError(true)}
+                    onError={() => {setHasError(true)
+                      toast.error('Error! please Reload');
+                    }}
                   />
                 </div>
               </div>

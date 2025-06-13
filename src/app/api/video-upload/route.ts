@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { PrismaClient } from "@/generated/prisma";
 export const runtime = "nodejs";
+import { auth } from "@clerk/nextjs/server";
 const prisma = new PrismaClient();
 
 // Configuration
@@ -19,8 +20,11 @@ interface CloudinaryUploadResult {
 }
 
 export async function POST(request: NextRequest) {
+  const { userId } = await auth();
   try {
-    //todo to check user
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     if (
       !process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
@@ -34,7 +38,6 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = await request.formData();
-    // console.log(formData)
     const file = formData.get("file") as File | null;
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
@@ -46,8 +49,6 @@ export async function POST(request: NextRequest) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
-    // console.log("bytes - ", bytes);
 
     const result = await new Promise(async (resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
@@ -66,8 +67,6 @@ export async function POST(request: NextRequest) {
           }
         }
       );
-
-      // console.log(uploadStream);
 
       if (!buffer || buffer.length === 0) {
         console.error("Buffer is empty or undefined");
@@ -91,7 +90,7 @@ export async function POST(request: NextRequest) {
     function clean(input: string | null | undefined): string {
       if (!input) return "";
       return input
-        .replace(/\u0000/g, "")         // remove null bytes
+        .replace(/\u0000/g, "") // remove null bytes
         .replace(/[\x00-\x1F\x7F]/g, "") // remove control characters
         .trim();
     }

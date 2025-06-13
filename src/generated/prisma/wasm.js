@@ -4,14 +4,14 @@
 
 Object.defineProperty(exports, "__esModule", { value: true });
 
-const {
+import {
   Decimal,
   objectEnumValues,
   makeStrictEnum,
   Public,
   getRuntime,
-  skip
-} = require('./runtime/index-browser.js')
+  // skip
+} from './runtime/index-browser.js'
 
 
 const Prisma = {}
@@ -158,7 +158,7 @@ exports.Prisma.ModelName = {
 class PrismaClient {
   constructor() {
     return new Proxy(this, {
-      get(target, prop) {
+      get() {
         let message
         const runtime = getRuntime()
         if (runtime.isEdge) {
